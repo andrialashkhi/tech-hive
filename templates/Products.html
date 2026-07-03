@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Catalog — Tech Hive{% endblock %}
+{% block content %}
+
+<section class="page-head">
+    <div class="container-lg">
+        <span class="eyebrow">The Catalog</span>
+        <h1 style="text-align:left; font-size: clamp(2.2rem, 5vw, 3.4rem);">
+            {% if search %}Results for "{{ search }}"{% else %}Every Product{% endif %}
+        </h1>
+        <p>{{ products|length }} item{{ 's' if products|length != 1 }} {% if selected_category %}in {{ selected_category }}{% endif %}{% if search %} matching your search{% endif %}.</p>
+    </div>
+</section>
+
+<section style="padding-top: 0;">
+    <div class="container-lg">
+        {% if is_moderator %}
+        <div style="margin-bottom: 24px;">
+            <a href="{{ url_for('add_product') }}" class="btn-hive">+ Add Product</a>
+        </div>
+        {% endif %}
+
+        <div class="section-head">
+            <div class="category-chips">
+                <a href="{{ url_for('products') }}{{ '?q=' + search if search }}" class="chip {{ 'active' if not selected_category }}">All</a>
+                {% for cat in categories %}
+                <a href="{{ url_for('products') }}?category={{ cat }}{{ '&q=' + search if search }}"
+                   class="chip {{ 'active' if selected_category == cat }}">{{ cat }}</a>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if products %}
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card reveal is-visible">
+                {% if product.featured %}<span class="featured-tag">Featured</span>{% endif %}
+                <div class="product-media">
+                    {% if product.image.startswith("http") %}
+                        <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="{{ url_for('static', filename=product.image) }}" class="card-img-top" alt="{{ product.name }}">
+                    {% endif %}
+                </div>
+
+                <div class="product-category">{{ product.category }}</div>
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">{{ product.description }}</p>
+
+                {% if product.stock == 0 %}
+                    <span class="stock-pill out"><span class="dot"></span>Out of Stock</span>
+                {% elif product.low_stock %}
+                    <span class="stock-pill low"><span class="dot"></span>Only {{ product.stock }} left</span>
+                {% else %}
+                    <span class="stock-pill in"><span class="dot"></span>In Stock</span>
+                {% endif %}
+
+                <div class="price-tag">{{ "%.0f"|format(product.price) }} <small>GEL</small></div>
+
+                <div class="card-actions">
+                    <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn-hive btn-sm-hive">Details</a>
+
+                    {% if is_moderator %}
+                    <a href="{{ url_for('edit_product', product_id=product.id) }}" class="btn-hive-outline btn-sm-hive">Edit</a>
+                    <form action="{{ url_for('delete_product', product_id=product.id) }}" method="POST" style="display:inline;"
+                          onsubmit="return confirm('Delete {{ product.name }}? This cannot be undone.');">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn-danger-ghost btn-sm-hive">Delete</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h3>No products found</h3>
+            <p style="margin: 0 auto;">Try a different search term or browse all categories.</p>
+            <a href="{{ url_for('products') }}" class="btn-hive-outline" style="margin-top: 20px;">Clear Filters</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

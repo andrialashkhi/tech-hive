@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Place an Order — Tech Hive{% endblock %}
+{% block content %}
+
+<section class="page-head">
+    <div class="container-lg">
+        <span class="eyebrow">Checkout</span>
+        <h1 style="text-align:left; font-size: clamp(2.2rem, 5vw, 3.4rem);">Place an Order</h1>
+        <p>Pick a product, tell us who it's for, and we'll get it moving.</p>
+    </div>
+</section>
+
+<section style="padding-top: var(--space-2);">
+    <div class="container-lg" style="max-width: 560px;">
+        {% if not products_list %}
+        <div class="empty-state">
+            <h3>Nothing in stock right now</h3>
+            <p style="margin: 0 auto;">Every product is sold out. Check the catalog again soon.</p>
+            <a href="{{ url_for('products') }}" class="btn-hive-outline" style="margin-top: 20px;">Browse Catalog</a>
+        </div>
+        {% else %}
+        <div class="card" style="padding: var(--space-4);">
+            <form method="POST" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="field-group">
+                    <label class="field-label">Full Name</label>
+                    {{ form.full_name(class="field-input", placeholder="Full Name") }}
+                    {% for error in form.full_name.errors %}
+                        <div class="field-error"><span>⚠ {{ error }}</span></div>
+                    {% endfor %}
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Product</label>
+                    {{ form.product(class="form-select field-input") }}
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Quantity</label>
+                    {{ form.quantity(class="field-input", min="1", max="20") }}
+                    {% for error in form.quantity.errors %}
+                        <div class="field-error"><span>⚠ {{ error }}</span></div>
+                    {% endfor %}
+                </div>
+
+                <div class="field-group" style="margin-top: 24px;">
+                    {{ form.submit(class="btn-hive", style="width:100%;") }}
+                </div>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

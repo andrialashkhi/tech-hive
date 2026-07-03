@@ -1,0 +1,59 @@
+<nav class="navbar navbar-expand-lg" data-bs-theme="dark">
+    <div class="container-lg">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='hivelogo.jpg') }}" alt="Tech Hive" width="34" height="34"
+                 class="d-inline-block align-text-top">
+            Tech <span>Hive</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link {{ 'active' if active == 'home' }}" href="{{ url_for('home') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ 'active' if active == 'products' }}" href="{{ url_for('products') }}">Catalog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ 'active' if active == 'order' }}" href="{{ url_for('order') }}">Order</a>
+                </li>
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link {{ 'active' if active == 'my-orders' }}" href="{{ url_for('my_orders') }}">My Orders</a>
+                </li>
+                {% endif %}
+                {% if current_user.is_authenticated and current_user.is_moderator %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {{ 'active' if active == 'manage-orders' }}" href="#" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">Manage</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ url_for('add_product') }}">Add Product</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('manage_orders') }}">All Orders</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+
+            <form class="d-flex nav-search me-lg-3" role="search" action="{{ url_for('products') }}" method="GET">
+                <input class="form-control" type="search" name="q" placeholder="Search products…" aria-label="Search"
+                       value="{{ request.args.get('q', '') }}">
+            </form>
+
+            {% if current_user.is_authenticated %}
+                <span class="user-chip me-2">
+                    <span class="dot"></span>
+                    {{ current_user.username }}
+                    {% if current_user.is_moderator %}<span class="role-badge">· MOD</span>{% endif %}
+                </span>
+                <a class="btn-hive-outline btn-sm-hive" href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a class="btn-hive-outline btn-sm-hive me-2" href="{{ url_for('login') }}">Log In</a>
+                <a class="btn-hive btn-sm-hive" href="{{ url_for('register') }}">Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

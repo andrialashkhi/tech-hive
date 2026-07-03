@@ -1,0 +1,47 @@
+<footer class="site-footer">
+    <div class="container-lg">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-brand">Tech <span>Hive</span></div>
+                <p style="max-width: 32ch;">Precision gear for players who take the grind seriously. Mechanical keyboards, mice, headsets and accessories — curated, in stock, ready to ship from Tbilisi.</p>
+            </div>
+            <div class="footer-col">
+                <h6>Shop</h6>
+                <a class="footer-link" href="{{ url_for('products') }}">Full Catalog</a>
+                <a class="footer-link" href="{{ url_for('products') }}?category=Keyboards">Keyboards</a>
+                <a class="footer-link" href="{{ url_for('products') }}?category=Mice">Mice</a>
+                <a class="footer-link" href="{{ url_for('products') }}?category=Headsets">Headsets</a>
+            </div>
+            <div class="footer-col">
+                <h6>Account</h6>
+                {% if current_user.is_authenticated %}
+                    <a class="footer-link" href="{{ url_for('my_orders') }}">My Orders</a>
+                    <a class="footer-link" href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                    <a class="footer-link" href="{{ url_for('login') }}">Log In</a>
+                    <a class="footer-link" href="{{ url_for('register') }}">Create Account</a>
+                {% endif %}
+                <a class="footer-link" href="{{ url_for('order') }}">Place an Order</a>
+            </div>
+            <div class="footer-col">
+                <h6>Join the Hive</h6>
+                <p style="margin-bottom: 12px;">Restocks, drops and discounts — straight to your inbox.</p>
+                <form class="newsletter-form" method="POST" action="{{ url_for('newsletter_signup') }}">
+                    {{ newsletter_form.hidden_tag() }}
+                    <input type="email" name="email" placeholder="you@email.com" required>
+                    <button type="submit" class="btn-hive btn-sm-hive">Join</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>&copy; 2026 Tech Hive · Tbilisi, Georgia</span>
+            <div class="footer-socials">
+                <a href="https://www.facebook.com/profile.php?id=61573099770139" aria-label="Facebook" target="_blank" rel="noopener">f</a>
+                <a href="tel:+995555590951" aria-label="Call us">☎</a>
+                <a href="mailto:Techhivetbilisi@gmail.com" aria-label="Email us">@</a>
+            </div>
+            <span>+995 555 590 951 · Techhivetbilisi@gmail.com</span>
+        </div>
+    </div>
+</footer>

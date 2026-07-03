@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — Tech Hive{% endblock %}
+{% block content %}
+
+<section class="page-head">
+    <div class="container-lg">
+        <a href="{{ url_for('products') }}" class="text-teal" style="font-size:.9rem; font-weight:600;">&larr; Back to Catalog</a>
+    </div>
+</section>
+
+<section style="padding-top: var(--space-3);">
+    <div class="container-lg">
+        <div class="detail-layout">
+            <div class="detail-media reveal is-visible">
+                {% if product.image.startswith("http") %}
+                    <img src="{{ product.image }}" alt="{{ product.name }}">
+                {% else %}
+                    <img src="{{ url_for('static', filename=product.image) }}" alt="{{ product.name }}">
+                {% endif %}
+            </div>
+
+            <div class="detail-panel reveal is-visible">
+                <div class="product-category">{{ product.category }}</div>
+                <h1 style="text-align:left; font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 12px;">{{ product.name }}</h1>
+
+                {% if product.stock == 0 %}
+                    <span class="stock-pill out"><span class="dot"></span>Out of Stock</span>
+                {% elif product.low_stock %}
+                    <span class="stock-pill low"><span class="dot"></span>Only {{ product.stock }} left in stock</span>
+                {% else %}
+                    <span class="stock-pill in"><span class="dot"></span>In Stock · {{ product.stock }} available</span>
+                {% endif %}
+
+                <p style="max-width: 60ch; margin: 16px 0;">{{ product.description }}</p>
+                <div class="price-tag" style="font-size: 2.2rem;">{{ "%.0f"|format(product.price) }} <small>GEL</small></div>
+
+                <div style="display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap;">
+                    {% if product.stock > 0 %}
+                        <a href="{{ url_for('order') }}" class="btn-hive">Order This Item</a>
+                    {% else %}
+                        <span class="btn-hive-outline" style="opacity:.5; cursor:not-allowed;">Currently Unavailable</span>
+                    {% endif %}
+
+                    {% if is_moderator %}
+                    <a href="{{ url_for('edit_product', product_id=product.id) }}" class="btn-hive-outline">Edit</a>
+                    <form action="{{ url_for('delete_product', product_id=product.id) }}" method="POST"
+                          onsubmit="return confirm('Delete {{ product.name }}? This cannot be undone.');">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn-danger-ghost">Delete</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if related %}
+        <div style="margin-top: var(--space-6);">
+            <h4 style="margin-bottom: 16px;">More in {{ product.category }}</h4>
+            <div class="related-strip">
+                {% for item in related %}
+                <a href="{{ url_for('product_detail', product_id=item.id) }}" class="product-card reveal is-visible" style="text-decoration:none;">
+                    <div class="product-media">
+                        {% if item.image.startswith("http") %}
+                            <img src="{{ item.image }}" alt="{{ item.name }}">
+                        {% else %}
+                            <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.name }}">
+                        {% endif %}
+                    </div>
+                    <h5>{{ item.name }}</h5>
+                    <div class="price-tag">{{ "%.0f"|format(item.price) }} <small>GEL</small></div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

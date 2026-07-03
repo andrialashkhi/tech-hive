@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Something Broke — Tech Hive{% endblock %}
+{% block content %}
+
+<div class="error-page hex-field">
+    <div>
+        <div class="error-code">500</div>
+        <h2 style="margin: 16px 0 12px;">The swarm hit a snag.</h2>
+        <p style="margin: 0 auto 28px;">Something went wrong on our end. Try again in a moment.</p>
+        <a href="{{ url_for('home') }}" class="btn-hive">Back to the Hive</a>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Log In — Tech Hive{% endblock %}
+{% block content %}
+
+<div class="auth-shell">
+    <div class="auth-side hex-field">
+        <div style="position: relative; z-index: 2;">
+            <img src="{{ url_for('static', filename='hivelogo.jpg') }}" alt="Tech Hive" width="72" style="border-radius: 14px; margin-bottom: 24px;">
+            <h2 style="max-width: 12ch; margin-bottom: 14px;">Welcome back to the Hive.</h2>
+            <p style="max-width: 34ch;">Sign in to track your orders, save your details for faster checkout, and get first access to restocks.</p>
+        </div>
+    </div>
+
+    <div class="auth-form-side">
+        <div class="auth-card">
+            <span class="eyebrow">Members Only</span>
+            <h1>Log In</h1>
+            <p style="margin-bottom: 28px;">Enter your credentials to continue.</p>
+
+            <form method="POST" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="field-group">
+                    <label class="field-label">Email</label>
+                    {{ form.email(class="field-input", placeholder="you@email.com") }}
+                    {% if form.email.errors %}
+                    <div class="field-error">
+                        {% for error in form.email.errors %}<span>⚠ {{ error }}</span>{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Password</label>
+                    {{ form.password(class="field-input", placeholder="Enter password") }}
+                    {% if form.password.errors %}
+                    <div class="field-error">
+                        {% for error in form.password.errors %}<span>⚠ {{ error }}</span>{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="field-group form-check">
+                    {{ form.remember(class="form-check-input") }}
+                    {{ form.remember.label(class="form-check-label") }}
+                </div>
+
+                <div class="field-group" style="margin-top: 28px;">
+                    {{ form.submit(class="btn-hive", style="width:100%;") }}
+                </div>
+
+                <p style="text-align:center; font-size:.9rem; color: var(--text-muted);">
+                    New to Tech Hive? <a href="{{ url_for('register') }}">Create an account</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

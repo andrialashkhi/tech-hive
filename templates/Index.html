@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero hex-field">
+    <div class="hero-glow"></div>
+    <div class="hero-glow hero-glow-2"></div>
+    <div class="container-lg">
+        <div class="hero-grid">
+            <div class="reveal is-visible">
+                <span class="eyebrow">Tbilisi · Est. 2026</span>
+                <h1 class="hero-title">
+                    Gear built
+                    <span class="outline">for the</span>
+                    Grind.
+                </h1>
+                <p class="hero-lede">Mechanical keyboards, precision mice and competitive-grade headsets — hand-picked for players who notice the difference between good and instant.</p>
+                <div class="hero-actions">
+                    <a href="{{ url_for('products') }}" class="btn-hive">Browse Catalog</a>
+                    <a href="{{ url_for('order') }}" class="btn-hive-outline">Place an Order</a>
+                </div>
+                <div class="hud-strip">
+                    <div class="hud-stat">
+                        <div class="num">{{ stats.products }}+</div>
+                        <div class="label">Products Live</div>
+                    </div>
+                    <div class="hud-stat">
+                        <div class="num">{{ stats.categories }}</div>
+                        <div class="label">Categories</div>
+                    </div>
+                    <div class="hud-stat">
+                        <div class="num">{{ stats.orders }}</div>
+                        <div class="label">Orders Shipped</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-hexcluster reveal is-visible">
+                {% for product in featured %}
+                <div class="hex-frame hf-{{ loop.index }}">
+                    {% if product.image.startswith("http") %}
+                        <img src="{{ product.image }}" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="{{ url_for('static', filename=product.image) }}" alt="{{ product.name }}">
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <div class="hex-badge" style="top: 8px; right: 10px;">30% OFF<br>SELECT GEAR</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="hex-field">
+    <div class="container-lg">
+        <div class="section-head reveal">
+            <div>
+                <span class="eyebrow">The Hive</span>
+                <h2>Four categories. Zero compromises.</h2>
+            </div>
+            <a href="{{ url_for('products') }}" class="btn-hive-outline">View All</a>
+        </div>
+
+        <div class="product-grid">
+            {% for cat in categories %}
+            <a href="{{ url_for('products') }}?category={{ cat }}" class="product-card reveal" style="text-decoration:none; align-items:center; text-align:center;">
+                <div class="product-media" style="margin-top: 8px;">
+                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, var(--surface-2), var(--surface));">
+                        <span style="font-family: var(--font-display); font-size: 2rem; color: var(--red);">
+                            {{ loop.index }}
+                        </span>
+                    </div>
+                </div>
+                <h5>{{ cat }}</h5>
+                <p>Shop the {{ cat|lower }} lineup</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="hex-field">
+    <div class="container-lg">
+        <div class="section-head reveal">
+            <div>
+                <span class="eyebrow">Fresh in the Hive</span>
+                <h2>Featured this week</h2>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            {% for product in featured %}
+            <div class="product-card reveal">
+                {% if product.featured %}<span class="featured-tag">Featured</span>{% endif %}
+                <div class="product-media">
+                    {% if product.image.startswith("http") %}
+                        <img src="{{ product.image }}" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="{{ url_for('static', filename=product.image) }}" alt="{{ product.name }}">
+                    {% endif %}
+                </div>
+                <div class="product-category">{{ product.category }}</div>
+                <h5>{{ product.name }}</h5>
+                <p>{{ product.description }}</p>
+                <div class="price-tag">{{ "%.0f"|format(product.price) }} <small>GEL</small></div>
+                <div class="card-actions">
+                    <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn-hive btn-sm-hive">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="hex-field">
+    <div class="container-lg">
+        <div class="card reveal" style="padding: var(--space-5); display:flex; justify-content:space-between; align-items:center; gap: var(--space-4); flex-wrap: wrap;">
+            <div>
+                <h3 style="margin-bottom:8px;">Ready to upgrade your setup?</h3>
+                <p style="margin:0;">Create an account to track orders, unlock member drops, and check out faster next time.</p>
+            </div>
+            <a href="{{ url_for('register') }}" class="btn-hive-teal">Join the Hive</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

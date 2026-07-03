@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}My Orders — Tech Hive{% endblock %}
+{% block content %}
+
+<section class="page-head">
+    <div class="container-lg">
+        <span class="eyebrow">Your Account</span>
+        <h1 style="text-align:left; font-size: clamp(2.2rem, 5vw, 3.4rem);">My Orders</h1>
+        <p>Everything you've ordered from Tech Hive, in one place.</p>
+    </div>
+</section>
+
+<section style="padding-top: var(--space-2);">
+    <div class="container-lg">
+        {% if orders %}
+        <div class="hive-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Placed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>#{{ order.id }}</td>
+                        <td><a href="{{ url_for('product_detail', product_id=order.product.id) }}">{{ order.product.name }}</a></td>
+                        <td>{{ order.quantity }}</td>
+                        <td>{{ "%.2f"|format(order.total) }} GEL</td>
+                        <td><span class="status-pill status-{{ order.status|lower }}">{{ order.status }}</span></td>
+                        <td>{{ order.created_at.strftime('%d %b %Y') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h3>No orders yet</h3>
+            <p style="margin: 0 auto;">Once you place an order, it'll show up here.</p>
+            <a href="{{ url_for('products') }}" class="btn-hive" style="margin-top: 20px;">Browse Catalog</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

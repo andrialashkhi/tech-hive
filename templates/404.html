@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Page Not Found — Tech Hive{% endblock %}
+{% block content %}
+
+<div class="error-page hex-field">
+    <div>
+        <div class="error-code">404</div>
+        <h2 style="margin: 16px 0 12px;">This cell is empty.</h2>
+        <p style="margin: 0 auto 28px;">The page you're looking for doesn't exist, or it's been moved.</p>
+        <a href="{{ url_for('home') }}" class="btn-hive">Back to the Hive</a>
+    </div>
+</div>
+
+{% endblock %}

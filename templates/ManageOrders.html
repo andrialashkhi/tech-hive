@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Manage Orders — Tech Hive{% endblock %}
+{% block content %}
+
+<section class="page-head">
+    <div class="container-lg">
+        <span class="eyebrow">Moderator</span>
+        <h1 style="text-align:left; font-size: clamp(2.2rem, 5vw, 3.4rem);">All Orders</h1>
+        <p>{{ orders|length }} order{{ 's' if orders|length != 1 }} across the whole store.</p>
+    </div>
+</section>
+
+<section style="padding-top: var(--space-2);">
+    <div class="container-lg">
+        {% if orders %}
+        <div class="hive-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Customer</th>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                        <th>Placed</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>#{{ order.id }}</td>
+                        <td>{{ order.full_name }}{% if order.user %} <span class="text-muted">({{ order.user.username }})</span>{% endif %}</td>
+                        <td><a href="{{ url_for('product_detail', product_id=order.product.id) }}">{{ order.product.name }}</a></td>
+                        <td>{{ order.quantity }}</td>
+                        <td>{{ "%.2f"|format(order.total) }} GEL</td>
+                        <td>{{ order.created_at.strftime('%d %b %Y') }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('update_order_status', order_id=order.id) }}"
+                                  style="display:flex; gap:6px; align-items:center;">
+                                {{ status_form.hidden_tag() }}
+                                <select name="status" class="form-select field-input" style="padding:6px 10px !important; font-size:.82rem;">
+                                    {% for s in status_form.status.choices %}
+                                    <option value="{{ s[0] }}" {{ 'selected' if s[0] == order.status }}>{{ s[0] }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn-hive-outline btn-sm-hive">Update</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h3>No orders yet</h3>
+            <p style="margin: 0 auto;">Orders placed by customers will appear here.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}
